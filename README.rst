@@ -17,22 +17,10 @@
 .. |ReadTheDocs| image:: https://readthedocs.org/projects/consensuscluster/badge/?version=latest
 .. _ReadTheDocs: https://consensuscluster.readthedocs.io/en/latest/?badge=latest
 
-project-template - A template for scikit-learn contributions
+consensuscluster
 ============================================================
 
-.. _scikit-learn: https://scikit-learn.org
+This is a Python implementation of consensus clustering, as introduced by Monti et al. (2003).
+It is still under development.
 
-**project-template** is a template project for scikit-learn_ compatible
-extensions.
-
-It aids development of estimators that can be used in scikit-learn pipelines
-and (hyper)parameter search, while facilitating testing (including some API
-compliance), documentation, open source development, packaging, and continuous
-integration.
-
-.. _documentation: https://consensuscluster.readthedocs.io/en/latest/quick_start.html
-
-Refer to the documentation_ to modify the template for your own scikit-learn
-contribution.
-
-*Thank you for cleanly contributing to the scikit-learn ecosystem!*
+This repo was made using the scikit-learn-contrib `project template<https://github.com/scikit-learn-contrib/project-template>`_.
