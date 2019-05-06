@@ -23,4 +23,4 @@ consensuscluster
 This is a Python implementation of consensus clustering, as introduced by Monti et al. (2003).
 It is still under development.
 
-This repo was made using the scikit-learn-contrib `project template<https://github.com/scikit-learn-contrib/project-template>`_.
+This repo was made using the scikit-learn-contrib `project template <https://github.com/scikit-learn-contrib/project-template>`_.
