@@ -13,3 +13,23 @@ import sys
 IS_TEST = False
 if hasattr(sys, '_called_from_test'):
     IS_TEST = True
+
+
+def printif(condition, *args, **kwargs):
+    """Wrapper function for print. Only prints if condition is met.
+
+    condition will be treated as a boolean. If it is True, the rest of
+    the parameters will be forwarded to print.
+    Usually, condition will be "verbose >= some value".
+    """
+    if condition:
+        print(*args, **kwargs)
+
+
+# Below are global constants for verbosity levels.
+
+DEBUGLVL = 4
+"""Very verbose output, mainly for use when debugging/testing."""
+
+USERLVL = 1
+"""User-level verbosity: less verbose, intended for the end user."""

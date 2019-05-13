@@ -5,6 +5,8 @@ from matplotlib.colors import Normalize
 from skimage.transform import resize  # TODO get rid of skimage dependency
 
 from misc import IS_TEST
+from misc import printif
+from misc import (DEBUGLVL, USERLVL)
 
 NOP_NORM = Normalize(0.0, 1.0)
 """Instance of Normalize which is a no-op.
@@ -19,7 +21,7 @@ own Normalizer and make it a no-op.
 """
 
 
-def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample):
+def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
     """Plot the given consensus matrix as a heatmap.
 
     This function plots the consensus heatmap onto the given Axes. The
@@ -66,4 +68,19 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample):
     downsample: boolean
         Determines whether the consensus matrix will be downsampled
         before it is passed to imshow.
+
+    verbose: non-negative int
+        Verbosity level of print statements. If this is 0, no output
+        will be produced. If >= 1, some print statements will trigger.
     """
+    printif(
+        verbose >= DEBUGLVL,
+        'Entering plot_consensus_heatmap'
+    )
+    # TODO input checking
+    if IS_TEST:
+        # check ndarray
+        # check 2d
+        # check values in [0,1]
+        # check symmetric
+        pass
