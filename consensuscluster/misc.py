@@ -1,0 +1,14 @@
+"""Miscellaneous things.
+"""
+
+
+import sys
+# We're using pytest to run tests. It's set up so that when tests are being
+# run, pytest will set the attribute '_called_from_test' on the sys module.
+# This means we can tell whether we're inside a testing session by checking
+# whether this attribute exists. IS_TEST is a global boolean variable that
+# denotes whether we're just running tests. Pytest documentation:
+# https://docs.pytest.org/en/latest/example/simple.html#detect-if-running-from-within-a-pytest-run
+IS_TEST = False
+if hasattr(sys, '_called_from_test'):
+    IS_TEST = True
