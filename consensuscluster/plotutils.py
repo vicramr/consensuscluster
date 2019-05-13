@@ -21,6 +21,39 @@ own Normalizer and make it a no-op.
 """
 
 
+def _get_ax_size(ax, fig):
+    """Find the size of an Axes, in pixels.
+
+    Given an Axes and its parent Figure, this function will approximate
+    the width and height of the Axes and return them in units of
+    pixels. The code for this function was taken from `this
+    stackoverflow post
+    <https://stackoverflow.com/questions/19306510/determine-matplotlib-axis-size-in-pixels>`_.
+
+    Parameters
+    ----------
+    ax : Axes
+        The Axes for which you want to compute the dimensions. This may
+        be part of a subplot.
+
+    fig : Figure
+        The Figure which contains ax.
+
+    Returns
+    -------
+    width : int
+        The approximate width of ax, rounded to the nearest pixel.
+
+    height : int
+        The approximate height of ax, rounded to the nearest pixel.
+    """
+    bbox = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+    width, height = bbox.width, bbox.height
+    width *= fig.dpi
+    height *= fig.dpi
+    return (width, height)
+
+
 def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
     """Plot the given consensus matrix as a heatmap.
 
