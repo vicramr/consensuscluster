@@ -52,4 +52,17 @@ def test_get_ax_size():
             check_answer(width_pix, height_pix,
                          approx_width_1, approx_height_1)
 
+            # Second, create a subplot on that same Figure
+            axarr1 = fig1.subplots(5, 3)
+            correct_width_sub = width_pix / 3
+            correct_height_sub = height_pix / 5
+            for i in range(5):
+                for j in range(3):
+                    ax_sub = axarr1[i, j]
+                    (approx_width_sub, approx_height_sub) = _get_ax_size(
+                        ax_sub,
+                        fig1
+                    )
+                    check_answer(correct_width_sub, correct_height_sub,
+                                 approx_width_sub, approx_height_sub)
 
