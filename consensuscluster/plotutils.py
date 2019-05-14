@@ -51,7 +51,7 @@ def _get_ax_size(ax, fig):
     width, height = bbox.width, bbox.height
     width *= fig.dpi
     height *= fig.dpi
-    return (width, height)
+    return (int(width), int(height))
 
 
 def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
@@ -61,6 +61,11 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
     consensus matrix must have already been reordered to group samples
     in each cluster together. This is required to get the "block
     matrix" look.
+
+    Normally, you won't need to do anything with this function's return
+    value. This function is written with a style advocated in `the
+    matplotlib Usage FAQ
+    <https://matplotlib.org/faq/usage_faq.html#coding-styles>`_.
 
     To actually plot the heatmap, this function will call
     matplotlib.axes.Axes.imshow. imshow has some potential memory
@@ -105,6 +110,11 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
     verbose: non-negative int
         Verbosity level of print statements. If this is 0, no output
         will be produced. If >= 1, some print statements will trigger.
+
+    Returns
+    -------
+    matplotlib AxesImage object
+        This is the return value from calling imshow.
     """
     printif(
         verbose >= DEBUGLVL,
@@ -117,3 +127,68 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
         # check values in [0,1]
         # check symmetric
         pass
+
+    # Next, deal with downsampling and interpolation.
+    (width, height) = _get_ax_size(ax, fig)
+    assert width == height  # The Axes must be square.
+    if not downsample:
+        mat_to_plot = ordered_cmat
+    else:
+        # Here, we will downsample the consensus matrix before passing
+        # it to imshow. This is to reduce imshow's memory overhead.
+        # However, plot quality is still the top priority, so we need
+        # to ensure that downsampling won't meaningfully change the
+        # plot which is produced. To solve this problem, we make the
+        # following assumption: if the downsampled image still has more
+        # pixels than the output plot would, then the plot will
+        # probably end up being pretty similar, as in either case,
+        # imshow would need to do its own additional downsampling in
+        # order to render the image.
+        # (Note: we are abstractly treating each value in the matrix
+        # as a pixel, although depending on the resolution and size of
+        # the output each value could end up corresponding to multiple
+        # pixels or less than a pixel.)
+        printif(verbose >= DEBUGLVL,
+                'Now computing dimensions to downsample to')
+        # To leave some room for error, we only downsample down to
+        # four times the number of pixels in the Axes.
+        n_samples = ordered_cmat.shape[0]
+        target_len = 2 * width
+        if n_samples <= target_len:
+            mat_to_plot = ordered_cmat
+        else:
+            mat_to_plot = resize(ordered_cmat, (target_len, target_len))  # TODO choose mode
+            assert mat_to_plot.shape == (target_len, target_len)
+    # The imshow function has an 'interpolation' parameter which
+    # determines the algorithm that will be used for downsampling or
+    # upsampling when rendering the image. This is IN ADDITION TO
+    # our own downsampling; we're doing downsampling to improve
+    # imshow's performance, but imshow will also apply an interpolation
+    # function itself.
+    # See here for some documentation on interpolation methods:
+    # https://matplotlib.org/gallery/images_contours_and_fields/interpolation_methods.html
+    # Among other things, this page states that:
+    # * If interpolation = "none" then it will default to
+    #   interpolation = "nearest", except for the Agg, ps, and pdf
+    #   backends.
+    # * For Agg, ps, and pdf, it is best to use "none" when the matrix
+    #   is bigger than the Axes, and it's best to use "nearest" when
+    #   the matrix is smaller than the Axes.
+    # Therefore, by using "none" when the matrix is bigger and
+    # "nearest" when it is smaller, we will always get the desired
+    # behavior.
+    side_len = mat_to_plot.shape[0]
+    if side_len >= width:
+        interpolation = 'none'
+    else:
+        interpolation = 'nearest'
+
+    out = ax.imshow(
+        mat_to_plot,
+        cmap=cmap,
+        norm=NOP_NORM,
+        aspect='equal',
+        interpolation=interpolation,
+        origin='upper'
+    )  # TODO resample param
+    return out
