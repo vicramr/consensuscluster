@@ -32,11 +32,11 @@ def _get_ax_size(ax, fig):
 
     Parameters
     ----------
-    ax : Axes
+    ax : matplotlib Axes object
         The Axes for which you want to compute the dimensions. This may
         be part of a subplot.
 
-    fig : Figure
+    fig : matplotlib Figure object
         The Figure which contains ax.
 
     Returns
@@ -85,14 +85,12 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
         should have been reordered to group samples in the same cluster
         together.
 
-    ax : Axes
-        The matplotlib Axes object onto which the heatmap will be
-        drawn.
+    ax : matplotlib Axes object
+        The Axes onto which the heatmap will be drawn.
 
-    fig : Figure
-        Must be the matplotlib Figure object which contains ax. It
-        will not be mutated; this function will only be reading some of
-        its attributes.
+    fig : matplotlib Figure object
+        Must be the Figure which contains ax. It will not be mutated;
+        this function will only be reading some of its attributes.
 
     cmap : str or Colormap
         This param determines the colormap which will be used to draw
