@@ -1,7 +1,9 @@
 """Functions to help create plots.
 """
-
+import numpy as np
 from matplotlib.colors import Normalize
+from sklearn.utils import check_array
+from sklearn.utils import check_symmetric
 from skimage.transform import resize  # TODO get rid of skimage dependency
 
 from misc import IS_TEST
@@ -118,13 +120,25 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
         verbose >= DEBUGLVL,
         'Entering plot_consensus_heatmap'
     )
-    # TODO input checking
+    assert isinstance(verbose, int)
     if IS_TEST:
-        # check ndarray
-        # check 2d
-        # check values in [0,1]
-        # check symmetric
-        pass
+        printif(
+            verbose >= DEBUGLVL,
+            'IS_TEST is true, so now validation ordered_cmat'
+        )
+        # We want to check that ordered_cmat is:
+        # * an ndarray
+        # * 2D
+        # * in [0,1]
+        # * symmetric
+        check_array(ordered_cmat)  # Should error on >2D, sparse, etc
+        assert np.all(
+            np.logical_and(
+                ordered_cmat >= 0.0,
+                ordered_cmat <= 1.0
+            )
+        )
+        check_symmetric(ordered_cmat, raise_exception=True)
 
     # Next, deal with downsampling and interpolation.
     (width, height) = _get_ax_size(ax, fig)
@@ -189,4 +203,5 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
         interpolation=interpolation,
         origin='upper'
     )  # TODO resample param
+    printif(verbose >= DEBUGLVL, 'Now exiting plot_consensus_heatmap')
     return out
