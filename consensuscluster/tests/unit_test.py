@@ -18,6 +18,7 @@ def _check_answer(true_width_pix, true_height_pix,
     Asserts that the answer found by _get_ax_size is within the
     acceptable margin of error of the true answer (or at least,
     whatever we're considering the true answer to be).
+
     :param true_width_pix: True width of the Axes, in pixels.
     :param true_height_pix: True height of the Axes, in pixels.
     :param approx_width_pix: The width approximation returned by
@@ -34,6 +35,35 @@ def _check_answer(true_width_pix, true_height_pix,
     assert width_lower_bound <= approx_width_pix <= width_upper_bound
     assert height_lower_bound <= approx_height_pix <= height_upper_bound
 
+
+def _check_answer_subplots(fig, axarr, rows, cols,
+                               total_width_pix, total_height_pix):
+    """Check _get_ax_size on every Axes in an array of Axes (subplots).
+
+    This function will compute the "correct" width/height pixels using
+    the number of rows/cols and then check the output of _get_ax_size
+    against these for EACH Axes in the axarr.
+
+    :param fig: Parent Figure containing the subplots.
+    :param axarr: Array of Axes containing equal-sized subplots.
+    :param rows: Number of rows of subplots in the full Figure.
+    :param cols: Number of columns of subplots in the full Figure.
+    :param total_width_pix: Total width (in pixels) of the full Figure.
+    :param total_height_pix: Total height (in pixels) of the full
+    Figure.
+    :return: nothing.
+    """
+    correct_width_sub = total_width_pix / cols  # "True" width, in pixels
+    correct_height_sub = total_height_pix / rows
+    for i in range(rows):
+        for j in range(cols):
+            ax_sub = axarr[i, j]
+            (approx_width_sub, approx_height_sub) = _get_ax_size(
+                ax_sub,
+                fig
+            )
+            _check_answer(correct_width_sub, correct_height_sub,
+                          approx_width_sub, approx_height_sub)
 
 figsizes = [
     (1, 1),
@@ -66,25 +96,15 @@ def test_get_ax_size():
             height_pix = height * dpi
 
             # First: try figure.Figure
-            fig1 = Figure(figsize=figsize, dpi=dpi)
-            ax1 = fig1.gca()
+            fig = Figure(figsize=figsize, dpi=dpi)
+            ax1 = fig.gca()
             # ax1 should cover the entire figure.
-            (approx_width_1, approx_height_1) = _get_ax_size(ax1, fig1)
+            (approx_width_1, approx_height_1) = _get_ax_size(ax1, fig)
             _check_answer(width_pix, height_pix,
-                         approx_width_1, approx_height_1)
+                          approx_width_1, approx_height_1)
 
             # Second, create a subplot on that same Figure
-            axarr1 = fig1.subplots(5, 3)
-            correct_width_sub = width_pix / 3
-            correct_height_sub = height_pix / 5
-            for i in range(5):
-                for j in range(3):
-                    ax_sub = axarr1[i, j]
-                    (approx_width_sub, approx_height_sub) = _get_ax_size(
-                        ax_sub,
-                        fig1
-                    )
-                    _check_answer(correct_width_sub, correct_height_sub,
-                                 approx_width_sub, approx_height_sub)
+            axarr = fig.subplots(5, 3)
+            _check_answer_subplots(fig, axarr, 5, 3, width_pix, height_pix)
 
 # *** END helper objects/tests for _get_ax_size ***
