@@ -1,4 +1,20 @@
-"""Contains unit tests to be run with pytest."""
+"""Contains unit tests for the function _get_ax_size.
+
+There are a lot of moving parts involved in writing these tests, so I
+felt it was best to encapsulate them all in their own file. The reason
+there's so much going on here is that we want to test a whole bunch of
+combinations of:
+* Various Figure-sizes
+* Various DPI values
+* Various methods of Figure creation
+* Various patterns of Axes creation on the Figure
+
+The goal is to test that _get_ax_size returns an answer that is within
+a reasonable margin of the answer you'd get by hand. Because I just
+grabbed this function off of stackoverflow without any evidence that it
+was actually correct, it's important to really test the bejesus out of
+it.
+"""
 
 import pytest
 from matplotlib.figure import Figure
@@ -7,12 +23,27 @@ from matplotlib import pyplot as plt
 from consensuscluster.plotutils import _get_ax_size
 
 
-# *** BEGIN helper objects/tests for _get_ax_size ***
 MAX_ERROR = .1  # We're willing to tolerate at most 10% error
+
+figsizes = [
+    (1, 1),
+    (3, 3),
+    (4, 4),
+    (4, 9),
+    (.87, .4445),
+    (5.829, 1)
+]
+
+dpis = [100, 43.793]
+
+figure_creation_funcs = [
+    lambda figsize, dpi: Figure(figsize=figsize, dpi=dpi),
+    lambda figsize, dpi: plt.figure(figsize=figsize, dpi=dpi)
+]
 
 
 def _check_answer(true_width_pix, true_height_pix,
-                 approx_width_pix, approx_height_pix):
+                  approx_width_pix, approx_height_pix):
     """Helper function for testing _get_ax_size.
 
     Asserts that the answer found by _get_ax_size is within the
@@ -37,7 +68,7 @@ def _check_answer(true_width_pix, true_height_pix,
 
 
 def _check_answer_subplots(fig, axarr, rows, cols,
-                               total_width_pix, total_height_pix):
+                           total_width_pix, total_height_pix):
     """Check _get_ax_size on every Axes in an array of Axes (subplots).
 
     This function will compute the "correct" width/height pixels using
@@ -65,46 +96,27 @@ def _check_answer_subplots(fig, axarr, rows, cols,
             _check_answer(correct_width_sub, correct_height_sub,
                           approx_width_sub, approx_height_sub)
 
-figsizes = [
-    (1, 1),
-    (3, 3),
-    (4, 4),
-    (4, 9),
-    (.87, .4445),
-    (5.829, 1)
-]
 
-dpis = [100, 43.793]
+def test_ax_and_axarr():
+    """Test creating a single Axes then an Axes array on the same fig.
 
-
-def test_get_ax_size():
-    """
-    Tests that _get_ax_size returns an answer that is within a
-    reasonable margin of the answer you'd get by hand.
-
-    Because I just grabbed this function off of stackoverflow without
-    any evidence that it was actually correct, it's important to really
-    test the bejesus out of it.
     :return: nothing.
     """
-
     for figsize in figsizes:
         (width, height) = figsize  # True values, in inches
         for dpi in dpis:
             # True values, in pixels
             width_pix = width * dpi
             height_pix = height * dpi
+            for figfunc in figure_creation_funcs:
+                fig = figfunc(figsize, dpi)
+                ax = fig.gca()
+                # ax should cover the entire figure.
+                (approx_width, approx_height) = _get_ax_size(ax, fig)
+                _check_answer(width_pix, height_pix,
+                              approx_width, approx_height)
 
-            # First: try figure.Figure
-            fig = Figure(figsize=figsize, dpi=dpi)
-            ax1 = fig.gca()
-            # ax1 should cover the entire figure.
-            (approx_width_1, approx_height_1) = _get_ax_size(ax1, fig)
-            _check_answer(width_pix, height_pix,
-                          approx_width_1, approx_height_1)
-
-            # Second, create a subplot on that same Figure
-            axarr = fig.subplots(5, 3)
-            _check_answer_subplots(fig, axarr, 5, 3, width_pix, height_pix)
-
-# *** END helper objects/tests for _get_ax_size ***
+                # Second, create a subplot on that same Figure
+                axarr = fig.subplots(5, 3)
+                _check_answer_subplots(fig, axarr, 5, 3,
+                                       width_pix, height_pix)
