@@ -124,7 +124,7 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
     if IS_TEST:
         printif(
             verbose >= DEBUGLVL,
-            'IS_TEST is true, so now validation ordered_cmat'
+            'IS_TEST is true, so now validating ordered_cmat'
         )
         # We want to check that ordered_cmat is:
         # * an ndarray
@@ -132,6 +132,7 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
         # * in [0,1]
         # * symmetric
         check_array(ordered_cmat)  # Should error on >2D, sparse, etc
+        assert ordered_cmat.ndim == 2
         assert np.all(
             np.logical_and(
                 ordered_cmat >= 0.0,
