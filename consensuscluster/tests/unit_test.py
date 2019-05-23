@@ -11,8 +11,8 @@ def test_nop_norm():
     Tests that NOP_NORM is indeed a no-op.
     :return: nothing
     """
-    # matplotlib Normalizers can take scalars or ndarrays as input.
-    # We need to test that for any input values [0,1], the Normalizer
+    # matplotlib Normalize objects can take scalars or ndarrays as
+    # input. We need to test that for any input values [0,1], NOP_NORM
     # does nothing.
     # Judging from the source code of the Normalize class, it should
     # also do nothing even for values outside of this interval, but
@@ -33,7 +33,7 @@ def test_nop_norm():
         np.random.random_sample((100, 101, 5)),
         np.random.random_sample((80, 80))
     ]
-    
+
     for val in test_cases:
         assert np.allclose(
             val,
