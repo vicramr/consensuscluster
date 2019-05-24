@@ -35,7 +35,8 @@ def test_nop_norm():
     ]
 
     for val in test_cases:
-        assert np.allclose(
-            val,
-            NOP_NORM(val)
-        )
+        norm_val = NOP_NORM(val)
+        assert np.allclose(val, norm_val)
+        # According to the numpy docs, np.allclose is NOT symmetric, so
+        # to be extra sure, we'll check both here.
+        assert np.allclose(norm_val, val)
