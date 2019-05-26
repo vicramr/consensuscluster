@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-"""A template for scikit-learn compatible packages."""
+"""A Python implementation of consensus clustering."""
 
 import codecs
 import os
@@ -12,16 +12,16 @@ with open(ver_file) as f:
     exec(f.read())
 
 DISTNAME = 'consensuscluster'
-DESCRIPTION = 'A template for scikit-learn compatible packages.'
+DESCRIPTION = 'A Python implementation of consensus clustering.'
 with codecs.open('README.rst', encoding='utf-8-sig') as f:
     LONG_DESCRIPTION = f.read()
-MAINTAINER = 'V. Birodkars, G. Lemaitre'
-MAINTAINER_EMAIL = 'vighneshbirodkar@nyu.edu, g.lemaitre58@gmail.com'
-URL = 'https://github.com/scikit-learn-contrib/project-template'
-LICENSE = 'new BSD'
-DOWNLOAD_URL = 'https://github.com/scikit-learn-contrib/project-template'
+MAINTAINER = 'Vicram Rajagopalan'
+MAINTAINER_EMAIL = 'vicram.r@hotmail.com'
+URL = 'https://github.com/vicramr/consensuscluster'
+LICENSE = 'Apache-2.0'
+DOWNLOAD_URL = 'https://github.com/vicramr/consensuscluster'
 VERSION = __version__
-INSTALL_REQUIRES = ['numpy', 'scipy', 'scikit-learn']
+INSTALL_REQUIRES = ['numpy', 'scipy', 'scikit-learn', 'scikit-image']
 CLASSIFIERS = ['Intended Audience :: Science/Research',
                'Intended Audience :: Developers',
                'License :: OSI Approved',
