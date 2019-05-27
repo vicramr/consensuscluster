@@ -33,6 +33,7 @@ it.
 import pytest
 from matplotlib.figure import Figure
 from matplotlib import pyplot as plt
+from matplotlib.testing import decorators
 
 from consensuscluster.plotutils import _get_ax_size
 
@@ -111,6 +112,7 @@ def _check_answer_subplots(fig, axarr, rows, cols,
                           approx_width_sub, approx_height_sub)
 
 
+@decorators.cleanup
 def test_ax_and_axarr():
     """Test creating a single Axes then an Axes array on the same fig.
 
