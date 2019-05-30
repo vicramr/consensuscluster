@@ -31,7 +31,7 @@ def test_nop_norm():
     # Judging from the source code of the Normalize class, it should
     # also do nothing even for values outside of this interval, but
     # we're not interested in testing this case.
-    np.random.seed(4)
+    np.random.seed(hash('test_nop_norm'))
     test_cases = [
         0,
         1,
