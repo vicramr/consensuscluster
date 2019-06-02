@@ -98,27 +98,29 @@ def _check_answer_subplots(fig, axarr, rows, cols,
                           approx_width_sub, approx_height_sub)
 
 
+@pytest.mark.parameterize('figsize', figsizes)
+@pytest.mark.parameterize('dpi', dpis)
+@pytest.mark.parameterize('figfunc', figure_creation_funcs)
 @decorators.cleanup
-def test_ax_and_axarr():
+def test_ax_and_axarr(figsize, dpi, figfunc):
     """Test creating a single Axes then an Axes array on the same fig.
 
     :return: nothing.
     """
-    for figsize in figsizes:
-        (width, height) = figsize  # True values, in inches
-        for dpi in dpis:
-            # True values, in pixels
-            width_pix = width * dpi
-            height_pix = height * dpi
-            for figfunc in figure_creation_funcs:
-                fig = figfunc(figsize, dpi)
-                ax = fig.gca()
-                # ax should cover the entire figure.
-                (approx_width, approx_height) = _get_ax_size(ax, fig)
-                _check_answer(width_pix, height_pix,
-                              approx_width, approx_height)
+    (width, height) = figsize  # True values, in inches
 
-                # Second, create a subplot on that same Figure
-                axarr = fig.subplots(5, 3)
-                _check_answer_subplots(fig, axarr, 5, 3,
-                                       width_pix, height_pix)
+    # True values, in pixels
+    width_pix = width * dpi
+    height_pix = height * dpi
+
+    fig = figfunc(figsize, dpi)
+    ax = fig.gca()
+    # ax should cover the entire figure.
+    (approx_width, approx_height) = _get_ax_size(ax, fig)
+    _check_answer(width_pix, height_pix,
+                  approx_width, approx_height)
+
+    # Second, create a subplot on that same Figure
+    axarr = fig.subplots(5, 3)
+    _check_answer_subplots(fig, axarr, 5, 3,
+                           width_pix, height_pix)
