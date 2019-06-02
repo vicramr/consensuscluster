@@ -48,7 +48,7 @@ def test_nop_norm(input_factory):
     # Note: Judging from the source code of the Normalize class, it
     # should also do nothing even for values outside of [0,1], but
     # we're not interested in testing this case.
-    np.random.seed((hash('test_nop_norm'), hash(input_factory)))  # TODO: explain this
+    np.random.seed(hash(('test_nop_norm', input_factory)) % (1 << 32))  # TODO: explain this
     val = input_factory()
     norm_val = NOP_NORM(val)
     # There is some floating-point arithmetic occurring in the above

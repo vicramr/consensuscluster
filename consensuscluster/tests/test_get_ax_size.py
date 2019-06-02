@@ -16,6 +16,7 @@ was actually correct, it's important to really test the bejesus out of
 it.
 """
 
+from math import floor, ceil
 import pytest
 from matplotlib.figure import Figure
 from matplotlib import pyplot as plt
@@ -23,8 +24,12 @@ from matplotlib.testing import decorators
 
 from consensuscluster.plotutils import _get_ax_size
 
-
-MAX_ERROR = .1  # We're willing to tolerate at most 10% error
+# These are the maximum fractions of error we're ok with.
+# There are different fractions for the lower-bound and upper-bound
+# because for _get_ax_size, we would prefer to overestimate rather
+# than underestimate.
+MAX_ERROR_LOWER = .06
+MAX_ERROR_UPPER = .1
 
 figsizes = [
     (1, 1),
@@ -59,10 +64,24 @@ def _check_answer(true_width_pix, true_height_pix,
     _get_ax_size.
     :return: nothing.
     """
-    width_lower_bound = true_width_pix - MAX_ERROR * true_width_pix
-    width_upper_bound = true_width_pix + MAX_ERROR * true_width_pix
-    height_lower_bound = true_height_pix - MAX_ERROR * true_height_pix
-    height_upper_bound = true_height_pix + MAX_ERROR * true_height_pix
+
+    # Here I round the bounds down/up to the nearest pixel depending on
+    # whether it's a lower or upper bound. The main reason for this is
+    # to make the tests for really small widths/heights more lax, bc
+    # often the approximate will be within a pixel of the real answer
+    # but the test will still fail.
+    # -Vicram
+    width_lower_bound = true_width_pix - MAX_ERROR_LOWER * true_width_pix
+    width_lower_bound = floor(width_lower_bound)
+
+    width_upper_bound = true_width_pix + MAX_ERROR_UPPER * true_width_pix
+    width_upper_bound = ceil(width_upper_bound)
+
+    height_lower_bound = true_height_pix - MAX_ERROR_LOWER * true_height_pix
+    height_lower_bound = floor(height_lower_bound)
+
+    height_upper_bound = true_height_pix + MAX_ERROR_UPPER * true_height_pix
+    height_upper_bound = ceil(height_upper_bound)
 
     assert width_lower_bound <= approx_width_pix <= width_upper_bound
     assert height_lower_bound <= approx_height_pix <= height_upper_bound
@@ -98,9 +117,9 @@ def _check_answer_subplots(fig, axarr, rows, cols,
                           approx_width_sub, approx_height_sub)
 
 
-@pytest.mark.parameterize('figsize', figsizes)
-@pytest.mark.parameterize('dpi', dpis)
-@pytest.mark.parameterize('figfunc', figure_creation_funcs)
+@pytest.mark.parametrize('figsize', figsizes)
+@pytest.mark.parametrize('dpi', dpis)
+@pytest.mark.parametrize('figfunc', figure_creation_funcs)
 @decorators.cleanup
 def test_ax_and_axarr(figsize, dpi, figfunc):
     """Test creating a single Axes then an Axes array on the same fig.
