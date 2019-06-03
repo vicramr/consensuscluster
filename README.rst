@@ -2,17 +2,17 @@
 
 |Travis|_ |AppVeyor|_ |Codecov|_ |CircleCI|_ |ReadTheDocs|_
 
-.. |Travis| image:: https://travis-ci.org/scikit-learn-contrib/project-template.svg?branch=master
-.. _Travis: https://travis-ci.org/scikit-learn-contrib/project-template
+.. |Travis| image:: https://travis-ci.org/vicramr/consensuscluster.svg?branch=master
+.. _Travis: https://travis-ci.org/vicramr/consensuscluster
 
-.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/coy2qqaqr1rnnt5y/branch/master?svg=true
-.. _AppVeyor: https://ci.appveyor.com/project/glemaitre/project-template
+.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/8b1k5c0fpx2etgx8/branch/master?svg=true
+.. _AppVeyor: https://ci.appveyor.com/project/vicramr/consensuscluster
 
-.. |Codecov| image:: https://codecov.io/gh/scikit-learn-contrib/project-template/branch/master/graph/badge.svg
-.. _Codecov: https://codecov.io/gh/scikit-learn-contrib/project-template
+.. |Codecov| image:: https://codecov.io/gh/vicramr/consensuscluster/branch/master/graph/badge.svg
+.. _Codecov: https://codecov.io/gh/vicramr/consensuscluster
 
-.. |CircleCI| image:: https://circleci.com/gh/scikit-learn-contrib/project-template.svg?style=shield&circle-token=:circle-token
-.. _CircleCI: https://circleci.com/gh/scikit-learn-contrib/project-template/tree/master
+.. |CircleCI| image:: https://circleci.com/gh/vicramr/consensuscluster.svg?style=shield&circle-token=:circle-token
+.. _CircleCI: https://circleci.com/gh/vicramr/consensuscluster/tree/master
 
 .. |ReadTheDocs| image:: https://readthedocs.org/projects/consensuscluster/badge/?version=latest
 .. _ReadTheDocs: https://consensuscluster.readthedocs.io/en/latest/?badge=latest
