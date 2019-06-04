@@ -5,7 +5,14 @@ os:
   - linux
   - osx
 
+# This only applies to Linux.
 dist: xenial
+
+# This only applies to MacOS. https://docs.travis-ci.com/user/reference/osx/#jdk-and-macos
+osx_image:
+  - xcode9.4
+  - xcode10.2
+
 sudo: false
 
 env:
@@ -14,9 +21,6 @@ env:
   - PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="*"
   - PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="nightly"
 
-matrix:
-  allow_failures:
-    - os: osx
 install:
   # install miniconda
   # Mac URL found here: https://docs.conda.io/en/latest/miniconda.html
