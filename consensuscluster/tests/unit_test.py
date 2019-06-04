@@ -1,13 +1,10 @@
 """Contains unit tests."""
+import random
 
 import pytest
 import numpy as np
 
-from pytest import register_assert_rewrite
-
-register_assert_rewrite('consensuscluster.misc')
-
-from consensuscluster.tests.conftest import cmat_list
+from consensuscluster.tests.conftest import cmat_list, set_random_seeds
 from consensuscluster.plotutils import NOP_NORM
 from consensuscluster.misc import assert_is_consensus_matrix
 
@@ -54,7 +51,7 @@ def test_nop_norm(input_factory):
     # Note: Judging from the source code of the Normalize class, it
     # should also do nothing even for values outside of [0,1], but
     # we're not interested in testing this case.
-    np.random.seed(hash(('test_nop_norm', input_factory)) % (1 << 32))  # TODO: explain this
+    set_random_seeds('test_nop_norm', input_factory)
     val = input_factory()
     norm_val = NOP_NORM(val)
     # There is some floating-point arithmetic occurring in the above
@@ -66,7 +63,7 @@ def test_nop_norm(input_factory):
     # a floating-point comparison with np.allclose rather than using
     # something like np.array_equal.
     assert np.allclose(val, norm_val)
-    # According to the numpy docs, np.allclose is NOT symmetric, so
+    # According to the numpy docs, np.allclose is NOT commutative, so
     # to be extra sure, we'll check both here.
     assert np.allclose(norm_val, val)
 
@@ -79,3 +76,29 @@ def test_sample_consensus_matrices(cmat):
     matrices in cmat_list. All of these should be well-formed.
     """
     assert_is_consensus_matrix(cmat)
+
+
+def test_set_random_seeds():
+    """Test that set_random_seeds actually ensures reproducibility."""
+    lst1 = []
+    lst2 = []
+    lst3 = []
+    lst4 = []
+    for _ in range(20):
+        set_random_seeds('test_set_random_seeds', 1, 3.14, ('this', 'is', 'a', 'tuple'))
+        lst1.append(random.random())
+        lst2.append(np.random.rand(6, 7, 8))
+        lst3.append(random.sample(['foo', 'bar', 'baz', 'quux'], 3))
+        lst4.append(np.random.gamma(5.67, 9.9999, size=(10, 11, 2)))
+    for elem1 in lst1:
+        for elem2 in lst1:
+            assert elem1 == elem2
+    for elem1 in lst2:
+        for elem2 in lst2:
+            assert np.array_equal(elem1, elem2)
+    for elem1 in lst3:
+        for elem2 in lst3:
+            assert elem1 == elem2
+    for elem1 in lst4:
+        for elem2 in lst4:
+            assert np.array_equal(elem1, elem2)

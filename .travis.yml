@@ -2,10 +2,8 @@ dist: trusty
 sudo: false
 
 language: python
-
-cache:
-  directories:
-  - $HOME/.cache/pip
+# Caching pip files: https://docs.travis-ci.com/user/caching/#pip-cache
+cache: pip
 
 matrix:
   include:
