@@ -1,6 +1,8 @@
 """Miscellaneous things.
 """
 
+import numpy as np
+from scipy.sparse import issparse
 
 import sys
 # We're using pytest to run tests. It's set up so that when tests are
@@ -33,3 +35,43 @@ DEBUGLVL = 4
 
 USERLVL = 1
 """User-level verbosity: less verbose, intended for the end user."""
+
+
+def assert_is_consensus_matrix(mat):
+    """Asserts that mat is a valid consensus matrix.
+
+    Returns nothing. If mat violates any of the criteria for being a
+    consensus matrix, this function will raise an AssertionError.
+
+    Note: it is possible that a matrix could pass these checks even
+    though it could not possibly be produced from a correct run of
+    consensus clustering. This function only checks the structural
+    aspects which are easiest to verify.
+    """
+    # We want to check that mat is:
+    # * a dense ndarray
+    # * 2D
+    # * square
+    # * in [0,1]
+    # * symmetric
+    assert isinstance(mat, np.ndarray)
+    assert not issparse(mat)
+    assert mat.ndim == 2
+    assert mat.shape[0] == mat.shape[1]
+    assert np.all(
+        np.logical_and(
+            mat >= 0.0,
+            mat <= 1.0
+        )
+    )
+    # Check that mat is symmetric.
+    # rtol is set to 0 here because we have such a small range of
+    # values (between 0 and 1) that it won't make much of a difference.
+    # So this just checks that all values are within 1e-7.
+    # That's easy to understand and also commutative (with nonzero
+    # rtol, np.allclose is not commutative)
+    assert np.allclose(mat, mat.T, rtol=0.0, atol=1e-7)
+    # Check that the elements on the diagonals are all 1s
+    diag = np.diagonal(mat)
+    ones = np.ones_like(diag)
+    assert np.allclose(diag, ones, rtol=0.0, atol=1e-8)

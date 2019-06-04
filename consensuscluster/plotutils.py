@@ -2,12 +2,12 @@
 """
 import numpy as np
 from matplotlib.colors import Normalize
-from scipy.sparse import issparse
 from skimage.transform import resize  # TODO get rid of skimage dependency
 
 from .misc import IS_TEST
 from .misc import printif
 from .misc import (DEBUGLVL, USERLVL)
+from .misc import assert_is_consensus_matrix
 
 NOP_NORM = Normalize(0.0, 1.0)
 """Instance of Normalize which is a no-op.
@@ -133,21 +133,7 @@ def plot_consensus_heatmap(ordered_cmat, ax, fig, cmap, downsample, verbose):
             verbose >= DEBUGLVL,
             'IS_TEST is true, so now validating ordered_cmat'
         )
-        # We want to check that ordered_cmat is:
-        # * an ndarray
-        # * 2D
-        # * in [0,1]
-        # * symmetric
-        assert isinstance(ordered_cmat, np.ndarray)
-        assert not issparse(ordered_cmat)
-        assert ordered_cmat.ndim == 2
-        assert np.all(
-            np.logical_and(
-                ordered_cmat >= 0.0,
-                ordered_cmat <= 1.0
-            )
-        )
-        assert np.array_equal(ordered_cmat, ordered_cmat.T)  # check symmetric
+        assert_is_consensus_matrix(ordered_cmat)
 
     # Next, deal with downsampling and interpolation.
     (width, height) = _get_ax_size(ax, fig)

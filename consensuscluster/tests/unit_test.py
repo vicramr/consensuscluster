@@ -3,7 +3,13 @@
 import pytest
 import numpy as np
 
+from pytest import register_assert_rewrite
+
+register_assert_rewrite('consensuscluster.misc')
+
+from consensuscluster.tests.conftest import cmat_list
 from consensuscluster.plotutils import NOP_NORM
+from consensuscluster.misc import assert_is_consensus_matrix
 
 
 @pytest.mark.parametrize(
@@ -63,3 +69,13 @@ def test_nop_norm(input_factory):
     # According to the numpy docs, np.allclose is NOT symmetric, so
     # to be extra sure, we'll check both here.
     assert np.allclose(norm_val, val)
+
+
+@pytest.mark.parametrize('cmat', cmat_list)
+def test_sample_consensus_matrices(cmat):
+    """Tests that the matrices in cmat_list pass as consensus matrices.
+
+    This test uses assert_is_consensus_matrix on the consensus
+    matrices in cmat_list. All of these should be well-formed.
+    """
+    assert_is_consensus_matrix(cmat)
