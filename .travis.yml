@@ -1,9 +1,8 @@
 dist: trusty
 sudo: false
 
-language: python
-# Caching pip files: https://docs.travis-ci.com/user/caching/#pip-cache
-cache: pip
+# https://docs.travis-ci.com/user/languages/minimal-and-generic/
+language: minimal
 
 matrix:
   include:
