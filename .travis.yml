@@ -21,6 +21,13 @@ env:
   - PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="*"
   - PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="nightly"
 
+# The 2 osx_image rows above also cause the Linux builds to be doubled even though
+# it won't make a difference, so here we exclude half of those doubled builds.
+matrix:
+  exclude:
+    - os: linux
+      osx_image: xcode10.2
+
 install:
   # install miniconda
   # Mac URL found here: https://docs.conda.io/en/latest/miniconda.html
