@@ -1,38 +1,49 @@
-dist: trusty
-sudo: false
-
 # https://docs.travis-ci.com/user/languages/minimal-and-generic/
 language: minimal
+
+os:
+  - linux
+  - osx
+
+dist: trusty
+sudo: false
 
 matrix:
   include:
     - env: PYTHON_VERSION="3.5" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1"
-           SKLEARN_VERSION="0.19.1"
+        SKLEARN_VERSION="0.19.1"
     - env: PYTHON_VERSION="3.6" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1"
-           SKLEARN_VERSION="0.20.3"
+        SKLEARN_VERSION="0.20.3"
     - env: PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*"
-           SKLEARN_VERSION="*"
+        SKLEARN_VERSION="*"
     - env: PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*"
-           SKLEARN_VERSION="nightly"
-
+        SKLEARN_VERSION="nightly"
+  allow_failures:
+    - os: osx
 install:
   # install miniconda
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-  - MINICONDA_PATH=/home/travis/miniconda
-  - chmod +x miniconda.sh && ./miniconda.sh -b -p $MINICONDA_PATH
-  - export PATH=$MINICONDA_PATH/bin:$PATH
+  # Mac URL found here: https://docs.conda.io/en/latest/miniconda.html
+  # Mac silent install instructions: https://conda.io/projects/conda/en/latest/user-guide/install/macos.html
+  - |
+    if [ $TRAVIS_OS_NAME = 'osx' ]; then
+      wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    fi
+  - chmod +x miniconda.sh && ./miniconda.sh -b -p $HOME/miniconda
+  - export PATH=$HOME/miniconda/bin:$PATH
   - conda update --yes conda
   # create the testing environment
   - conda create -n testenv --yes python=$PYTHON_VERSION pip
   - source activate testenv
   - |
-      if [ $SKLEARN_VERSION = "nightly" ]; then
-        conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION cython nose pytest pytest-cov scikit-image
-          # install nightly wheels
-          pip install --pre -f https://sklearn-nightly.scdn8.secure.raxcdn.com scikit-learn
-      else
-        conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION scikit-learn==$SKLEARN_VERSION cython nose pytest pytest-cov scikit-image
-      fi
+    if [ $SKLEARN_VERSION = "nightly" ]; then
+      conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION cython nose pytest pytest-cov scikit-image
+        # install nightly wheels
+        pip install --pre -f https://sklearn-nightly.scdn8.secure.raxcdn.com scikit-learn
+    else
+      conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION scikit-learn==$SKLEARN_VERSION cython nose pytest pytest-cov scikit-image
+    fi
   - pip install codecov
   - pip install .
 
