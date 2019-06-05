@@ -5,7 +5,6 @@ build: false
 
 image:
   - Visual Studio 2013
-  - Visual Studio 2015
   - Visual Studio 2017
 
 environment:
@@ -30,20 +29,10 @@ environment:
       SCIPY_VERSION: "0.19.1"
       SKLEARN_VERSION: "0.19.1"
 
-    - PYTHON: "C:\\Miniconda37"
-      NUMPY_VERSION: "1.13.1"
-      SCIPY_VERSION: "0.19.1"
-      SKLEARN_VERSION: "0.19.1"
-
     - PYTHON: "C:\\Miniconda37-x64"
       NUMPY_VERSION: "1.13.1"
       SCIPY_VERSION: "0.19.1"
       SKLEARN_VERSION: "0.19.1"
-
-    - PYTHON: "C:\\Miniconda37"
-      NUMPY_VERSION: "*"
-      SCIPY_VERSION: "*"
-      SKLEARN_VERSION: "*"
 
     - PYTHON: "C:\\Miniconda37-x64"
       NUMPY_VERSION: "*"
@@ -57,7 +46,7 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PYTHON%\\Library\\bin;%PATH%"
   # install the dependencies
   - "conda create -n testenv --yes pip numpy==%NUMPY_VERSION% scipy==%SCIPY_VERSION% scikit-learn==%SKLEARN_VERSION% matplotlib nose pytest pytest-cov scikit-image"
-  - conda activate testenv
+  - activate testenv
   - pip install codecov
   - pip install .
 
