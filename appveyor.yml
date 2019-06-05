@@ -1,17 +1,51 @@
+# Note: all Appveyor VMs are running 64-bit Windows. See this thread for 2018:
+# https://help.appveyor.com/discussions/questions/20637-is-it-possible-to-force-running-tests-on-both-32-bit-and-64-bit-windows
+
 build: false
+
+image:
+  - Visual Studio 2013
+  - Visual Studio 2015
+  - Visual Studio 2017
 
 environment:
   matrix:
-    - PYTHON: "C:\\Miniconda3-x64"
-      PYTHON_VERSION: "3.5.x"
-      PYTHON_ARCH: "32"
+    - PYTHON: "C:\\Miniconda35"
       NUMPY_VERSION: "1.13.1"
       SCIPY_VERSION: "0.19.1"
       SKLEARN_VERSION: "0.19.1"
 
-    - PYTHON: "C:\\Miniconda3-x64"
-      PYTHON_VERSION: "3.6.x"
-      PYTHON_ARCH: "64"
+    - PYTHON: "C:\\Miniconda35-x64"
+      NUMPY_VERSION: "1.13.1"
+      SCIPY_VERSION: "0.19.1"
+      SKLEARN_VERSION: "0.19.1"
+
+    - PYTHON: "C:\\Miniconda36"
+      NUMPY_VERSION: "1.13.1"
+      SCIPY_VERSION: "0.19.1"
+      SKLEARN_VERSION: "0.19.1"
+
+    - PYTHON: "C:\\Miniconda36-x64"
+      NUMPY_VERSION: "1.13.1"
+      SCIPY_VERSION: "0.19.1"
+      SKLEARN_VERSION: "0.19.1"
+
+    - PYTHON: "C:\\Miniconda37"
+      NUMPY_VERSION: "1.13.1"
+      SCIPY_VERSION: "0.19.1"
+      SKLEARN_VERSION: "0.19.1"
+
+    - PYTHON: "C:\\Miniconda37-x64"
+      NUMPY_VERSION: "1.13.1"
+      SCIPY_VERSION: "0.19.1"
+      SKLEARN_VERSION: "0.19.1"
+
+    - PYTHON: "C:\\Miniconda37"
+      NUMPY_VERSION: "*"
+      SCIPY_VERSION: "*"
+      SKLEARN_VERSION: "*"
+
+    - PYTHON: "C:\\Miniconda37-x64"
       NUMPY_VERSION: "*"
       SCIPY_VERSION: "*"
       SKLEARN_VERSION: "*"
@@ -22,13 +56,19 @@ install:
   # https://github.com/conda/conda/issues/1753
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PYTHON%\\Library\\bin;%PATH%"
   # install the dependencies
-  - "conda install --yes pip numpy==%NUMPY_VERSION% scipy==%SCIPY_VERSION% scikit-learn==%SKLEARN_VERSION% nose pytest pytest-cov scikit-image"
+  - "conda create -n testenv --yes pip numpy==%NUMPY_VERSION% scipy==%SCIPY_VERSION% scikit-learn==%SKLEARN_VERSION% matplotlib nose pytest pytest-cov scikit-image"
+  - conda activate testenv
   - pip install codecov
   - pip install .
 
 test_script:
   - mkdir for_test
   - cd for_test
+  - python --version
+  - python -c "import numpy; print('numpy version:', numpy.__version__)"
+  - python -c "import scipy; print('scipy version:', scipy.__version__)"
+  - python -c "import sklearn; print('sklearn version:', sklearn.__version__)"
+  - python -c "import matplotlib; print('matplotlib version:', matplotlib.__version__)"
   - pytest --durations=0 -v --cov=consensuscluster --pyargs consensuscluster
 
 after_test:
