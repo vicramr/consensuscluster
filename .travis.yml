@@ -50,7 +50,7 @@ install:
       # install nightly wheels: https://github.com/MacPython/scikit-learn-wheels/pull/17
       pip install --pre -f https://sklearn-nightly.scdn8.secure.raxcdn.com scikit-learn
     else
-      conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION scikit-learn==$SKLEARN_VERSION matplotlib cython nose pytest pytest-cov scikit-image
+      conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION scikit-learn==$SKLEARN_VERSION matplotlib pytest pytest-cov scikit-image
     fi
   - pip install codecov
   - pip install .
