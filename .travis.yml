@@ -47,8 +47,8 @@ install:
   - |
     if [ $SKLEARN_VERSION = "nightly" ]; then
       conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION cython nose pytest pytest-cov scikit-image
-        # install nightly wheels
-        pip install --pre -f https://sklearn-nightly.scdn8.secure.raxcdn.com scikit-learn
+      # install nightly wheels: https://github.com/MacPython/scikit-learn-wheels/pull/17
+      pip install --pre -f https://sklearn-nightly.scdn8.secure.raxcdn.com scikit-learn
     else
       conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION scikit-learn==$SKLEARN_VERSION cython nose pytest pytest-cov scikit-image
     fi
