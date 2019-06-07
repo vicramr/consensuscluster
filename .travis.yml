@@ -16,10 +16,16 @@ osx_image:
 sudo: false
 
 env:
-  - PYTHON_VERSION="3.5" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.19.1"
-  - PYTHON_VERSION="3.6" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.20.3"
-  - PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="*"
-  - PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="nightly"
+  - PYTHON_VERSION="3.5" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.19.1" MPL_VERSION="2.2"
+  - PYTHON_VERSION="3.5" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.19.1" MPL_VERSION="*"
+  - PYTHON_VERSION="3.5" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="*" MPL_VERSION="*"
+  - PYTHON_VERSION="3.6" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.19.1" MPL_VERSION="2.2"
+  - PYTHON_VERSION="3.6" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.20.3" MPL_VERSION="2.2"
+  - PYTHON_VERSION="3.6" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.20.3" MPL_VERSION="*"
+  - PYTHON_VERSION="3.6" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="*" MPL_VERSION="*"
+  - PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="*" MPL_VERSION="2.2"
+  - PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="*" MPL_VERSION="*"
+  - PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="nightly" MPL_VERSION="*"
 
 # The 2 osx_image rows above also cause the Linux builds to be doubled even though
 # it won't make a difference, so here we exclude half of those doubled builds.
@@ -46,11 +52,11 @@ install:
   - source activate testenv
   - |
     if [ $SKLEARN_VERSION = "nightly" ]; then
-      conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION matplotlib cython nose pytest pytest-cov scikit-image
+      conda install --yes numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib=$MPL_VERSION cython nose pytest pytest-cov scikit-image
       # install nightly wheels: https://github.com/MacPython/scikit-learn-wheels/pull/17
       pip install --pre -f https://sklearn-nightly.scdn8.secure.raxcdn.com scikit-learn
     else
-      conda install --yes numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION scikit-learn==$SKLEARN_VERSION matplotlib cython nose pytest pytest-cov scikit-image
+      conda install --yes numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION scikit-learn=$SKLEARN_VERSION matplotlib=$MPL_VERSION cython nose pytest pytest-cov scikit-image
     fi
   - pip install codecov
   - pip install .
@@ -63,6 +69,7 @@ script:
   - python -c "import scipy; print('scipy version:', scipy.__version__)"
   - python -c "import sklearn; print('sklearn version:', sklearn.__version__)"
   - python -c "import matplotlib; print('matplotlib version:', matplotlib.__version__)"
+  - python ../checkversions.py $NUMPY_VERSION $SCIPY_VERSION $SKLEARN_VERSION $MPL_VERSION
   - pytest --durations=0 -v --cov=consensuscluster --pyargs consensuscluster
 
 after_success:

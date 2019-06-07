@@ -10,40 +10,46 @@ image:
 environment:
   matrix:
     - PYTHON: "C:\\Miniconda35"
-      PYTHON_VERSION: "3.5"
-      NUMPY_VERSION: "1.13.1"
-      SCIPY_VERSION: "0.19.1"
-      SKLEARN_VERSION: "*"
+      PYTHON_VERSION: "=3.5"
+      NUMPY_VERSION: "=1.13.1"
+      SCIPY_VERSION: "=0.19.1"
+      SKLEARN_VERSION: "=*"
+      MPL_VERSION: "=2.2"
 
     - PYTHON: "C:\\Miniconda35-x64"
-      PYTHON_VERSION: "3.5"
-      NUMPY_VERSION: "1.13.1"
-      SCIPY_VERSION: "0.19.1"
-      SKLEARN_VERSION: "*"
+      PYTHON_VERSION: "=3.5"
+      NUMPY_VERSION: "=1.13.1"
+      SCIPY_VERSION: "=0.19.1"
+      SKLEARN_VERSION: "=*"
+      MPL_VERSION: "=2.2"
 
     - PYTHON: "C:\\Miniconda36"
-      PYTHON_VERSION: "3.6"
-      NUMPY_VERSION: "1.13.1"
-      SCIPY_VERSION: "0.19.1"
-      SKLEARN_VERSION: "0.19.1"
+      PYTHON_VERSION: "=3.6"
+      NUMPY_VERSION: "=1.13.1"
+      SCIPY_VERSION: "=0.19.1"
+      SKLEARN_VERSION: "=0.19.1"
+      MPL_VERSION: "=2.2"
 
     - PYTHON: "C:\\Miniconda36-x64"
-      PYTHON_VERSION: "3.6"
-      NUMPY_VERSION: "1.13.1"
-      SCIPY_VERSION: "0.19.1"
-      SKLEARN_VERSION: "0.19.1"
+      PYTHON_VERSION: "=3.6"
+      NUMPY_VERSION: "=1.13.1"
+      SCIPY_VERSION: "=0.19.1"
+      SKLEARN_VERSION: "=0.19.1"
+      MPL_VERSION: "=3.*"
 
     - PYTHON: "C:\\Miniconda37-x64"
-      PYTHON_VERSION: "3.7"
-      NUMPY_VERSION: "1.13.1"
-      SCIPY_VERSION: "*"
-      SKLEARN_VERSION: "0.19.1"
+      PYTHON_VERSION: "=3.7"
+      NUMPY_VERSION: "=*"
+      SCIPY_VERSION: "=*"
+      SKLEARN_VERSION: "=0.19.1"
+      MPL_VERSION: "=2.2"
 
     - PYTHON: "C:\\Miniconda37-x64"
-      PYTHON_VERSION: "3.7"
-      NUMPY_VERSION: "*"
-      SCIPY_VERSION: "*"
-      SKLEARN_VERSION: "*"
+      PYTHON_VERSION: "=3.7"
+      NUMPY_VERSION: "=*"
+      SCIPY_VERSION: "=*"
+      SKLEARN_VERSION: "=*"
+      MPL_VERSION: "=*"
 
 install:
   # Prepend miniconda installed Python to the PATH of this build
@@ -53,7 +59,7 @@ install:
   # install the dependencies
   # Note: here we are using fuzzy matching, as opposed to exact matching. See here (heads up, it's not well documented):
   # https://docs.conda.io/projects/conda-build/en/latest/resources/package-spec.html#package-match-specifications
-  - "conda create -n testenv --yes python=%PYTHON_VERSION% pip numpy=%NUMPY_VERSION% scipy=%SCIPY_VERSION% scikit-learn=%SKLEARN_VERSION% matplotlib nose pytest pytest-cov scikit-image"
+  - "conda create -n testenv --yes python%PYTHON_VERSION% pip numpy%NUMPY_VERSION% scipy%SCIPY_VERSION% scikit-learn%SKLEARN_VERSION% matplotlib%MPL_VERSION% nose pytest pytest-cov scikit-image"
   - activate testenv
   - pip install codecov
   - pip install .
