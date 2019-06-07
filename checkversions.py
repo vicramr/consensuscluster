@@ -31,9 +31,11 @@ def match_entire_string(pattern, string):
   else:
     return False
 
-if (not match_entire_string(numpy_pattern, numpy.__version__)) or
-   (not match_entire_string(scipy_pattern, scipy.__version__)) or
-   (not match_entire_string(sklearn_pattern, sklearn.__version__)) or
-   (not match_entire_string(mpl_pattern, mpl.__version__)):
+bool1 = match_entire_string(numpy_pattern, numpy.__version__)
+bool2 = match_entire_string(scipy_pattern, scipy.__version__)
+bool3 = match_entire_string(sklearn_pattern, sklearn.__version__)
+bool4 = match_entire_string(mpl_pattern, mpl.__version__)
+if bool1 and bool2 and bool3 and bool4:
+  print('All versions look correct.')
+else:
   sys.exit(1)
-print('All versions look correct.')
