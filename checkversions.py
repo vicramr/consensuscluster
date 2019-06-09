@@ -5,7 +5,7 @@ numpy_version_env = sys.argv[1]
 scipy_version_env = sys.argv[2]
 sklearn_version_env = sys.argv[3]
 mpl_version_env = sys.argv[4]
-
+# TODO: if there isn't an asterisk at the end, need to add an asterisk at the end. Maybe?
 numpy_regex = numpy_version_env.replace('.', r'\.')
 scipy_regex = scipy_version_env.replace('.', r'\.')
 sklearn_regex = sklearn_version_env.replace('.', r'\.')
