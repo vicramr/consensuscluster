@@ -29,10 +29,21 @@ env:
 
 # The 2 osx_image rows above also cause the Linux builds to be doubled even though
 # it won't make a difference, so here we exclude half of those doubled builds.
+#
+# Also, we need to literally copy the 'env' lines that we want to allow to fail.
 matrix:
   exclude:
     - os: linux
       osx_image: xcode10.2
+  allow_failures:
+    - env: PYTHON_VERSION="3.5" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.19.1" MPL_VERSION="2.2.4"
+      os: linux
+    - env: PYTHON_VERSION="3.6" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.19.1" MPL_VERSION="2.2.4"
+      os: linux
+    - env: PYTHON_VERSION="3.6" NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.20.3" MPL_VERSION="2.2.4"
+      os: linux
+    - env: PYTHON_VERSION="3.7" NUMPY_VERSION="*" SCIPY_VERSION="*" SKLEARN_VERSION="*" MPL_VERSION="2.2.4"
+      os: linux
 
 install:
   # install miniconda
