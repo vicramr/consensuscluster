@@ -30,9 +30,9 @@ def pytest_unconfigure(config):
     del sys._called_from_test
 
 
-# This is a list of consensus matrices that will be used for testing
-# functions that take a consensus matrix as input.
-cmat_list = [
+# This is a list of small consensus matrices that will be used for
+# testing functions that take a consensus matrix as input.
+small_cmats = [
     np.array([[1.0, 1.0],
               [1.0, 1.0]],
              dtype=np.float32),

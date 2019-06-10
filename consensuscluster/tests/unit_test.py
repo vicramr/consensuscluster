@@ -4,7 +4,7 @@ import random
 import pytest
 import numpy as np
 
-from consensuscluster.tests.conftest import cmat_list, set_random_seeds
+from consensuscluster.tests.conftest import small_cmats, set_random_seeds
 from consensuscluster.plotutils import NOP_NORM
 from consensuscluster.misc import assert_is_consensus_matrix
 
@@ -68,12 +68,12 @@ def test_nop_norm(input_factory):
     assert np.allclose(norm_val, val)
 
 
-@pytest.mark.parametrize('cmat', cmat_list)
+@pytest.mark.parametrize('cmat', small_cmats)
 def test_sample_consensus_matrices(cmat):
-    """Tests that the matrices in cmat_list pass as consensus matrices.
+    """Test that the arrays in small_cmats pass as consensus matrices
 
     This test uses assert_is_consensus_matrix on the consensus
-    matrices in cmat_list. All of these should be well-formed.
+    matrices in small_cmats. All of these should be well-formed.
     """
     assert_is_consensus_matrix(cmat)
 
