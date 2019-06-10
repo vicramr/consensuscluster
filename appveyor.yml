@@ -7,21 +7,26 @@ image:
   - Visual Studio 2013
   - Visual Studio 2017
 
+# Note: When using C:\\Miniconda35 and C:\\Miniconda35-x64, they consistently failed
+# to install any version of matplotlib 2.2, even though I am pretty certain that conda
+# has matplotlib 2.2 packages to work with python 3.5. So I think this is a Miniconda35
+# issue. This is why I'm using Miniconda36 to test python 3.5.
+# -Vicram
 environment:
   matrix:
-    - PYTHON: "C:\\Miniconda35"
+    - PYTHON: "C:\\Miniconda36"
       PYTHON_VERSION: "=3.5"
       NUMPY_VERSION: "=1.13.1"
       SCIPY_VERSION: "=0.19.1"
       SKLEARN_VERSION: "=*"
-      MPL_VERSION: "=2.2.3"
+      MPL_VERSION: "=2.2"
 
-    - PYTHON: "C:\\Miniconda35-x64"
+    - PYTHON: "C:\\Miniconda36-x64"
       PYTHON_VERSION: "=3.5"
       NUMPY_VERSION: "=1.13.1"
       SCIPY_VERSION: "=0.19.1"
       SKLEARN_VERSION: "=*"
-      MPL_VERSION: "=2.2.3"
+      MPL_VERSION: "=2.2"
 
     - PYTHON: "C:\\Miniconda36"
       PYTHON_VERSION: "=3.6"
